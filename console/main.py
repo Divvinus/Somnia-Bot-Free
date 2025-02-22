@@ -22,6 +22,7 @@ class Console:
         "👤 Profile",
         "💰 Faucet",
         "💸 Transfer STT",
+        "👥 Socials quests 1",
         "🚪 Exit",
     )
     MODULES_DATA = {
@@ -29,6 +30,7 @@ class Console:
         "👤 Profile": "profile",
         "💰 Faucet": "faucet",
         "💸 Transfer STT": "transfer_stt",
+        "👥 Socials quests 1": "socials_quests_1",
         "🚪 Exit": "exit"
     }
 

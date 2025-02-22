@@ -97,9 +97,12 @@ class SomniaWorker:
             f"{'='*50}"
         )
 
-    async def get_me_info(self):
+    async def get_me_info(self, get_referral_code: bool = False):
         response = await self.send_request(request_type="GET", method="/users/me", headers=self.base_headers)
         response = response.json()
+        
+        if get_referral_code:
+            return response.get("referralCode")
 
         null_fields = {
             key: value for key, value in response.items() 
@@ -112,3 +115,10 @@ class SomniaWorker:
    
         return null_fields
     
+    async def activate_referral(self):
+        logger.info(f"Account {self.wallet_address} | Activating your account")
+        response = await self.send_request(
+            request_type="POST", 
+            method="/referrals", 
+            headers=self.base_headers
+        ) 

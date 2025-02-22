@@ -10,6 +10,9 @@ class Account:
     pk_or_mnemonic: str
     proxy: Optional[Proxy] = None
     auth_token: Optional[str] = None
+    referral_codes: list[tuple[str, int]] | None = None
+    referral_private_keys: list[str] | None = None
+    token_discord: Optional[str] = None
 
 class DelayRange(BaseModel):
     min: int
