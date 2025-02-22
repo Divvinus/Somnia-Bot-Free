@@ -98,7 +98,7 @@ Note: One code per line. After the code, add a colon and specify the required nu
 ### 3. Discord Setup
 
 1. Get Discord token (found in request headers as "authorization")
-2. Token should either start with "mfa." or contain alphanumeric token
+2. Token should either start with "MTI" or contain alphanumeric token
 3. Add it to `config/data/token_discord.txt`
 
 ### 4. settings.yaml Configuration
