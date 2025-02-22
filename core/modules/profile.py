@@ -179,6 +179,7 @@ class ProfileModule(SomniaWorker):
         )
         
     async def get_account_statistics(self):
+        logger.info(f"Account {self.wallet_address} | Getting account statistics...")
         if not await self.onboarding():
             logger.error(f"Account {self.wallet_address} | Failed to authorize on Somnia")
             return False
