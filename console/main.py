@@ -20,12 +20,14 @@ class Console:
     MODULES = (
         "🏆 Account statistics",
         "👤 Profile",
-        "🚪Exit",
+        "💰 Faucet",
+        "🚪 Exit",
     )
     MODULES_DATA = {
         "🏆 Account statistics": "account_statistics",
         "👤 Profile": "profile",
-        "🚪Exit": "exit"
+        "💰 Faucet": "faucet",
+        "🚪 Exit": "exit"
     }
 
     def __init__(self):

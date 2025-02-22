@@ -24,6 +24,14 @@ class SomniaBot:
             return True, "Profile completed successfully"
         return False, "Profile failed"
     
+    @staticmethod
+    async def process_faucet(account: Account) -> tuple[bool, str]:
+        module = FaucetModule(account)
+        result = await module.faucet()
+        if result:
+            return True, "Faucet completed successfully"
+        return False, "Faucet failed"
+    
     
     
     
