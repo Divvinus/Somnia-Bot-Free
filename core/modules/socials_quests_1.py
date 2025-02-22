@@ -7,11 +7,13 @@ from eth_utils import to_checksum_address
 from loguru import logger
 from models import Account
 from core.api import SomniaWorker
+from core.modules import ProfileModule
 
 
 class SocialsQuest1Module(SomniaWorker):
     def __init__(self, account: Account):
         super().__init__(account)
+        self.profile_module = ProfileModule(account)
 
     @staticmethod
     def get_incomplete_quests(response: dict) -> list:
@@ -138,38 +140,58 @@ class SocialsQuest1Module(SomniaWorker):
 
     async def connect_discord(self) -> bool:
         json_data = {"questId": 12}
-
-        response = await self.send_request(
-            request_type="POST",
-            method="/social/discord/connect",
-            headers=self.base_headers,
-            json_data=json_data,
-        )
-        response = response.json()
         
-        if response.get("success") is True:
-            logger.success(f"Account {self.wallet_address} | Discord connected successfully")
-            return True
-        else:
-            logger.error(f"Account {self.wallet_address} | Failed to connect Discord. Response: {response}")
-            return False
+        while True:
+            response = await self.send_request(
+                request_type="POST",
+                method="/social/discord/connect",
+                headers=self.base_headers,
+                json_data=json_data,
+            )
+            response = response.json()
+            
+            if response.get("success") is True:
+                logger.success(f"Account {self.wallet_address} | Discord connected successfully")
+                return True
+            if response.get("success") is False:
+                if response.get("reason") == "Verification conditions not met":
+                    if self.account.token_discord:
+                        result = await self.profile_module.connect_discord_account()
+                        if result: continue
+                        else: return False
+                    else:
+                        logger.warning(f"Account {self.wallet_address} | No Discord token found. Please add it to the account")
+                        return False
+            else:
+                logger.error(f"Account {self.wallet_address} | Failed to connect Discord. Response: {response}")
+                return False
 
     async def connect_twitter(self) -> bool:
         json_data = {"questId": 3}
-
-        response = await self.send_request(
-            request_type="POST",
-            method="/social/twitter/connect",
-            headers=self.base_headers,
-            json_data=json_data,
-        )
-        response = response.json()
-        if response.get("success") is True:
-            logger.success(f"Account {self.wallet_address} | Twitter connected successfully")
-            return True
-        else:
-            logger.error(f"Account {self.wallet_address} | Failed to connect Twitter")
-            return False
+        
+        while True:
+            response = await self.send_request(
+                request_type="POST",
+                method="/social/twitter/connect",
+                headers=self.base_headers,
+                json_data=json_data,
+            )
+            response = response.json()
+            if response.get("success") is True:
+                logger.success(f"Account {self.wallet_address} | Twitter connected successfully")
+                return True
+            if response.get("success") is False:
+                if response.get("reason") == "Verification conditions not met":
+                    if self.account.auth_token:
+                        result = await self.profile_module.connect_twitter_account()
+                        if result: continue
+                        else: return False
+                    else:
+                        logger.warning(f"Account {self.wallet_address} | No Twitter token found. Please add it to the account")
+                        return False
+            else:
+                logger.error(f"Account {self.wallet_address} | Failed to connect Twitter")
+                return False
 
     async def referral(self) -> bool:
         try:

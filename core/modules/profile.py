@@ -8,7 +8,7 @@ from utils import generate_username, random_sleep
 
 
 class ProfileModule(SomniaWorker):
-    def __init__(self, account: Account, referral_code: str):
+    def __init__(self, account: Account, referral_code: str = ""):
         super().__init__(account)
         self.twitter_worker = TwitterWorker(account)
         self.discord_worker = DiscordConnectModule(account)
