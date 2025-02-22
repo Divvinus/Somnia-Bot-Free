@@ -21,12 +21,14 @@ class Console:
         "🏆 Account statistics",
         "👤 Profile",
         "💰 Faucet",
+        "💸 Transfer STT",
         "🚪 Exit",
     )
     MODULES_DATA = {
         "🏆 Account statistics": "account_statistics",
         "👤 Profile": "profile",
         "💰 Faucet": "faucet",
+        "💸 Transfer STT": "transfer_stt",
         "🚪 Exit": "exit"
     }
 

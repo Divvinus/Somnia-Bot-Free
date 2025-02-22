@@ -32,7 +32,14 @@ class SomniaBot:
             return True, "Faucet completed successfully"
         return False, "Faucet failed"
     
-    
+    @staticmethod
+    async def process_transfer_stt(account: Account) -> tuple[bool, str]:
+        module = TransferSTTModule(account, config.somnia_rpc)
+        result = await module.transfer_stt()
+        show_trx_log(module.wallet_address, f"Transfer STT", result[0], result[1])
+        if result:
+            return True, "Transfer STT completed successfully"
+        return False, "Transfer STT failed"
     
     
 # def get_address(mnemonic):
