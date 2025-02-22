@@ -3,7 +3,7 @@ import json
 
 from loguru import logger
 from models import Account
-from core.api import SomniaWorker, TwitterWorker, DiscordConnectModule
+from core.api import SomniaWorker, TwitterWorker
 from utils import generate_username, random_sleep
 
 
@@ -11,7 +11,6 @@ class ProfileModule(SomniaWorker):
     def __init__(self, account: Account, referral_code: str):
         super().__init__(account)
         self.twitter_worker = TwitterWorker(account)
-        self.discord_worker = DiscordConnectModule(account)
         self.referral_code = referral_code
 
     async def create_username(self) -> bool:
