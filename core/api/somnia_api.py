@@ -1,7 +1,9 @@
+
 from core.wallet import Wallet
 from core.api import BaseAPIClient
 from models import Account
 from loguru import logger
+from utils import random_sleep
 
 class SomniaWorker:
     def __init__(self, account: Account):
@@ -117,8 +119,26 @@ class SomniaWorker:
     
     async def activate_referral(self):
         logger.info(f"Account {self.wallet_address} | Activating your account")
-        response = await self.send_request(
-            request_type="POST", 
-            method="/referrals", 
-            headers=self.base_headers
-        ) 
+        success = False
+        
+        for _ in range(3):
+            response = await self.send_request(
+                request_type="POST", 
+                method="/referrals", 
+                headers=self.base_headers,
+                verify=False
+            ) 
+            if response.status_code == 200:
+                logger.success(f"Account {self.wallet_address} | Account activated")
+                success = True
+                break
+            if response.status_code == 500:
+                logger.warning(f"Account {self.wallet_address} | The server cannot process the request, try to activate the account again...")
+                await random_sleep(self.wallet_address, 2, 5)
+                continue
+            else:
+                logger.error(f"Account {self.wallet_address} | Account activation failed. Reason: {response.json()}")
+                break
+        
+        if not success:
+            logger.warning(f"Account {self.wallet_address} | Failed to activate account after 3 attempts. Please try again later")

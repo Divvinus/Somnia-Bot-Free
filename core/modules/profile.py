@@ -191,15 +191,17 @@ class ProfileModule(SomniaWorker):
             if not await self.onboarding():
                 logger.error(f"Account {self.wallet_address} | Failed to authorize on Somnia")
                 return False
-            
-            await self.activate_referral()
-                
+                            
             logger.info(f"Account {self.wallet_address} | Authorized on the site Somnia")
             await random_sleep(self.wallet_address, 30, 60)
 
             await self.referral_bind()
             logger.info(f"Account {self.wallet_address} | Referral code bound to the account")
             await random_sleep(self.wallet_address, 60, 120)
+            
+            referral_code = await self.get_me_info(get_referral_code=True)
+            if referral_code is None:
+                await self.activate_referral()
 
             null_fields = await self.get_me_info()
             logger.info(f"Account {self.wallet_address} | Getting the user info...")
